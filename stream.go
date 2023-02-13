@@ -2,7 +2,6 @@ package streamwebsocket
 
 import (
 	"encoding/json"
-	"log"
 )
 
 type Stream struct {
@@ -42,9 +41,7 @@ func (s *Stream) Start() {
 			delete(wsSubs, w)
 		case msg := <-s.publishCh:
 			for w := range wsSubs {
-				if err := w.WriteSafe(1, msg); err != nil {
-					log.Println("write error:", err)
-
+				if err := w.WriteSafe(TextMessage, msg); err != nil {
 					s.wsUnsubCh <- w
 					w.CloseSafe([]byte{})
 				}
